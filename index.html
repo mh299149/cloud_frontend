@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Services Selection</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-top: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card-header, .card-footer {
+            background-color: #ffffff;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .card-body {
+            background-color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Cloud Services Selection</h2>
+            </div>
+            <div class="card-body">
+                <form id="serviceForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="compute">Compute</label>
+                        <select class="form-control" id="compute" multiple required>
+                            <option value="AWS EC2">AWS EC2</option>
+                            <option value="AWS Elastic Beanstalk">AWS Elastic Beanstalk</option>
+                            <option value="Docker & AWS Elastic Beanstalk">Docker & AWS Elastic Beanstalk</option>
+                            <option value="AWS ECS & ECR">AWS ECS & ECR</option>
+                            <option value="AWS Lambda">AWS Lambda</option>
+                            <option value="AWS Step Functions">AWS Step Functions</option>
+                            <option value="AWS IoT 1-Click">AWS IoT 1-Click</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="storage">Storage</label>
+                        <select class="form-control" id="storage" required>
+                            <option value="AWS S3">AWS S3</option>
+                            <option value="AWS DynamoDB">AWS DynamoDB</option>
+                            <option value="AWS Aurora">AWS Aurora</option>
+                            <option value="AWS AppSync">AWS AppSync</option>
+                            <option value="AWS Athena">AWS Athena</option>
+                            <option value="AWS IoT Analytics">AWS IoT Analytics</option>
+                            <option value="AWS Neptune">AWS Neptune</option>
+                            <option value="AWS RDS">AWS RDS</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="network">Network</label>
+                        <select class="form-control" id="network" required>
+                            <option value="AWS VPC">AWS VPC</option>
+                            <option value="AWS API Gateway">AWS API Gateway</option>
+                            <option value="Amazon CloudFront">Amazon CloudFront</option>
+                            <option value="Amazon EventBridge">Amazon EventBridge</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="general">General</label>
+                        <select class="form-control" id="general" multiple required>
+                            <option value="AWS Backup">AWS Backup</option>
+                            <option value="AWS Batch">AWS Batch</option>
+                            <option value="Amazon Comprehend">Amazon Comprehend</option>
+                            <option value="AWS Data Pipeline">AWS Data Pipeline</option>
+                            <option value="AWS DeepComposer">AWS DeepComposer</option>
+                            <option value="AWS DeepLens">AWS DeepLens</option>
+                            <option value="AWS DeepRacer">AWS DeepRacer</option>
+                            <option value="Amazon ElastiCache">Amazon ElastiCache</option>
+                            <option value="AWS Elastic Load Balancing">AWS Elastic Load Balancing</option>
+                            <option value="AWS EventBridge">AWS EventBridge</option>
+                            <option value="Amazon Elastic Inference">Amazon Elastic Inference</option>
+                            <option value="Amazon Forecast">Amazon Forecast</option>
+                            <option value="AWS Glue">AWS Glue</option>
+                            <option value="AWS Glue DataBrew">AWS Glue DataBrew</option>
+                            <option value="AWS GuardDuty">AWS GuardDuty</option>
+                            <option value="AWS IoT Core">AWS IoT Core</option>
+                            <option value="AWS IoT Greengrass">AWS IoT Greengrass</option>
+                            <option value="Amazon Kendra">Amazon Kendra</option>
+                            <option value="AWS KMS">AWS KMS</option>
+                            <option value="AWS Kinesis">AWS Kinesis</option>
+                            <option value="Amazon Lex">Amazon Lex</option>
+                            <option value="AWS OpsWorks">AWS OpsWorks</option>
+                            <option value="Amazon Personalize">Amazon Personalize</option>
+                            <option value="Amazon Polly">Amazon Polly</option>
+                            <option value="Amazon Rekognition">Amazon Rekognition</option>
+                            <option value="AWS Robomaker">AWS Robomaker</option>
+                            <option value="AWS Secrets Manager">AWS Secrets Manager</option>
+                            <option value="AWS SNS">AWS SNS</option>
+                            <option value="AWS SQS">AWS SQS</option>
+                            <option value="Amazon Sumerian">Amazon Sumerian</option>
+                            <option value="Amazon Textract">Amazon Textract</option>
+                            <option value="AWS Timestream">AWS Timestream</option>
+                            <option value="Amazon Transcribe">Amazon Transcribe</option>
+                            <option value="Amazon Translate">Amazon Translate</option>
+                            <option value="AWS CloudFormation">AWS CloudFormation</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Selected Services</h2>
+            </div>
+            <div class="card-body">
+                <div id="servicesList"></div>
+            </div>
+        </div>  
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script>
+        const baseUrl = 'http://'+'aaaa';
+        const endpoint = baseUrl + '/api/services';
+
+        $(document).ready(function() {
+            fetchServices();
+
+            $('#serviceForm').on('submit', function(event) {
+                event.preventDefault();
+
+                const username = $('#username').val();
+                const compute = $('#compute').val();
+                const storage = $('#storage').val();
+                const network = $('#network').val();
+                const general = $('#general').val();
+
+                axios.post(endpoint, {
+                    username,
+                    compute,
+                    storage,
+                    network,
+                    general
+                }).then(response => {
+                    $('#serviceForm')[0].reset();
+                    fetchServices();
+                }).catch(error => {
+                    console.error('There was an error!', error);
+                });
+            });
+        });
+
+        function fetchServices() {
+            axios.get(endpoint)
+                .then(response => {
+                    const services = response.data;
+                    let servicesHtml = '';
+
+                    services.forEach(service => {
+                        servicesHtml += `
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">${service.username}</h5>
+                                    <p class="card-text"><strong>Compute:</strong> ${service.compute.join(', ')}</p>
+                                    <p class="card-text"><strong>Storage:</strong> ${service.storage}</p>
+                                    <p class="card-text"><strong>Network:</strong> ${service.network}</p>
+                                    <p class="card-text"><strong>General:</strong> ${service.general.join(', ')}</p>
+                                    <button class="btn btn-danger" onclick="deleteService(${service.id})">Delete</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    $('#servicesList').html(servicesHtml);
+                });
+        }
+
+        function deleteService(id) {
+            axios.delete(`${endpoint}/${id}`)
+                .then(response => {
+                    fetchServices();
+                }).catch(error => {
+                    console.error('There was an error!', error);
+                });
+        }
+    </script>
+</body>
+</html>
